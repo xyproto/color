@@ -4,6 +4,7 @@ import (
 
 	"image/color"
 	"math"
+
 )
 
 type HSB struct {
@@ -20,13 +21,19 @@ func RGBToHLS(rgb color.RGBA) (hsb HSB) {
 	var r, g, b float64
 	var rgb_min, rgb_max, delta float64
 
-	r = float64(rgb.R) / 255.0
-	g = float64(rgb.G) / 255.0
-	b = float64(rgb.B) / 255.0
+	r = float64(rgb.R) / 256.0
+	g = float64(rgb.G) / 256.0
+	b = float64(rgb.B) / 256.0
 
 	rgb_max = math.Max(r, math.Max(g, b))
 	rgb_min = math.Min(r, math.Min(g, b))
+	hsb.B = rgb_max
 	delta = rgb_max - rgb_min
+	if(rgb_max==0){
+		hsb.S=0
+	}else {
+		hsb.S=delta/rgb_max
+	}
 
 	if delta== 0 {
 		hsb.H = 0
@@ -43,72 +50,45 @@ func RGBToHLS(rgb color.RGBA) (hsb HSB) {
 		hsb.H = int(60*(r-g)/delta + 240)
 	}
 
-	hsb.B = rgb_max
 
-	if hsb.B == 0 {
-		hsb.S = 0
-	} else if hsb.B <=0.5 {
-		hsb.S = delta*2 / (2.0 *hsb.B)
-	} else {
-		hsb.S = delta *2 / (2.0 - 2.0*hsb.B)
-	}
+
+
 	return
 }
 
 func (hsl HSB) HSB2RGB() (color.RGBA) {
-	var max_rgb_val = 255.0
-	var sat = hsl.S *100
-	var bright = hsl.B *100
-	var hue = hsl.H
-	var sat_f = float64(sat) / 100.0
-	var bright_f = float64(bright) / 100.0
-	var r, g, b int
+	r,g,b:=0.0,0.0,0.0
+	i:=int((hsl.H/60)%6)
+	var f float64=float64(hsl.H)/60.0-float64(i)
+	p:=hsl.B*(1-hsl.S)
+	q:=hsl.B*(1.0-f*hsl.S)
+	t:=hsl.B*(1-(1-f)*hsl.S)
 
-	var colors [3]int
-
-	if bright <= 0 {
-		colors[0] = 0
-		colors[1] = 0
-		colors[2] = 0
+	switch i {
+	case 0:
+		r=hsl.B
+		g=t
+		b=p
+	case 1:
+		r=q
+		g=hsl.B
+		b=p
+	case 2:
+		r=p
+		g=hsl.B
+		b=t
+	case 3:
+		r=p
+		g=q
+		b=hsl.B
+	case 4:
+		r=t
+		g=p
+		b=hsl.B
+	case 5:
+		r=hsl.B
+		g=p
+		b=q
 	}
-	if sat <= 0 {
-		colors[0] = int(bright_f * max_rgb_val)
-		colors[1] = int(bright_f * max_rgb_val)
-		colors[2] = int(bright_f * max_rgb_val)
-	} else {
-		if hue >= 0 && hue < 120 {
-			var hue_primary = 1.0 - (float64(hue) / 120.0)
-			var hue_secondary = float64(hue) / 120.0
-			var sat_primary = (1.0 - hue_primary) * (1.0 - sat_f)
-			var sat_secondary = (1.0 - hue_secondary) * (1.0 - sat_f)
-			var sat_tertiary = 1.0 - sat_f
-			r = int((bright_f * max_rgb_val) * (hue_primary + sat_primary))
-			g = int((bright_f * max_rgb_val) * (hue_secondary + sat_secondary))
-			b = int((bright_f * max_rgb_val) * sat_tertiary)
-		} else if hue >= 120 && hue < 240 {
-			var hue_primary = 1.0 - ((float64(hue) - 120.0) / 120.0)
-			var hue_secondary = (float64(hue) - 120.0) / 120.0
-			var sat_primary = (1.0 - hue_primary) * (1.0 - sat_f)
-			var sat_secondary = (1.0 - hue_secondary) * (1.0 - sat_f)
-			var sat_tertiary = 1.0 - sat_f
-			r = int((bright_f * max_rgb_val) * sat_tertiary)
-			g = int((bright_f * max_rgb_val) * (hue_primary + sat_primary))
-			b = int((bright_f * max_rgb_val) * (hue_secondary + sat_secondary))
-		} else if hue >= 240 && hue <= 360 {
-			var hue_primary = 1.0 - ((float64(hue) - 240.0) / 120.0)
-			var hue_secondary = (float64(hue) - 240.0) / 120.0
-			var sat_primary = (1.0 - hue_primary) * (1.0 - sat_f)
-			var sat_secondary = (1.0 - hue_secondary) * (1.0 - sat_f)
-			var sat_tertiary = 1.0 - sat_f
-			r = int((bright_f * max_rgb_val) * (hue_secondary + sat_secondary))
-			g = int((bright_f * max_rgb_val) * sat_tertiary)
-			b = int((bright_f * max_rgb_val) * (hue_primary + sat_primary))
-		}
-
-		colors[0] = r
-		colors[1] = g
-		colors[2] = b
-
-	}
-	return color.RGBA{R:uint8(r), G:uint8(g), B:uint8(b)}
+	return color.RGBA{R:uint8(r*255), G:uint8(g*255), B:uint8(b*255)}
 }
