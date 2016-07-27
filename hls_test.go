@@ -22,7 +22,7 @@ func TestSpecific(t *testing.T) {
 	//h, l, s := RGBToHLS(r0, g0, b0)
 	//fmt.Print(h*360,l*100,s*100)
 
-	var hls = HSB{h: 1, b: 71, s: 31}
+	var hls = HSB{H: 1, B: 71, S: 31}
 
 	fmt.Print(hls.HSB2RGB())
 	//if delta(r0, r1) > 1 || delta(g0, g1) > 1 || delta(b0, b1) > 1 {

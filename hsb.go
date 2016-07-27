@@ -7,12 +7,12 @@ import (
 )
 
 type HSB struct {
-	h int //色相
-	s, b float64// ,饱和度(纯度),l/b亮度
+	H    int     //色相
+	S, B float64 // ,饱和度(纯度),l/b亮度
 }
 
 func (hsb HSB)Gethsb()(int,int,int){
-	return hsb.h,int(hsb.s*100),int(hsb.b*100)
+	return hsb.H,int(hsb.S *100),int(hsb.B *100)
 }
 
 func RGBToHLS(rgb color.RGBA) (hsb HSB) {
@@ -29,37 +29,37 @@ func RGBToHLS(rgb color.RGBA) (hsb HSB) {
 	delta = rgb_max - rgb_min
 
 	if delta== 0 {
-		hsb.h = 0
-		hsb.s = 0
+		hsb.H = 0
+		hsb.S = 0
 	} else if rgb_max == r {
 		if g >= b {
-			hsb.h = int(60 * (g - b) / delta)
+			hsb.H = int(60 * (g - b) / delta)
 		} else {
-			hsb.h = int(60*(g-b)/delta + 360)
+			hsb.H = int(60*(g-b)/delta + 360)
 		}
 	} else if rgb_max == g {
-		hsb.h = int(60*(b-r)/delta + 120)
+		hsb.H = int(60*(b-r)/delta + 120)
 	} else {
-		hsb.h = int(60*(r-g)/delta + 240)
+		hsb.H = int(60*(r-g)/delta + 240)
 	}
 
-	hsb.b = rgb_max
+	hsb.B = rgb_max
 
-	if hsb.b == 0 {
-		hsb.s = 0
-	} else if hsb.b <=0.5 {
-		hsb.s = delta*2 / (2.0 *hsb.b)
+	if hsb.B == 0 {
+		hsb.S = 0
+	} else if hsb.B <=0.5 {
+		hsb.S = delta*2 / (2.0 *hsb.B)
 	} else {
-		hsb.s = delta *2 / (2.0 - 2.0*hsb.b)
+		hsb.S = delta *2 / (2.0 - 2.0*hsb.B)
 	}
 	return
 }
 
 func (hsl HSB) HSB2RGB() (color.RGBA) {
 	var max_rgb_val = 255.0
-	var sat = hsl.s*100
-	var bright = hsl.b*100
-	var hue = hsl.h
+	var sat = hsl.S *100
+	var bright = hsl.B *100
+	var hue = hsl.H
 	var sat_f = float64(sat) / 100.0
 	var bright_f = float64(bright) / 100.0
 	var r, g, b int
