@@ -20,9 +20,9 @@ func RGBToHLS(rgb color.RGBA) (hsb HSB) {
 	var r, g, b float64
 	var rgb_min, rgb_max, delta float64
 
-	r = float64(rgb.R) / 256.0
-	g = float64(rgb.G) / 256.0
-	b = float64(rgb.B) / 256.0
+	r = float64(rgb.R) / 255.0
+	g = float64(rgb.G) / 255.0
+	b = float64(rgb.B) / 255.0
 
 	rgb_max = math.Max(r, math.Max(g, b))
 	rgb_min = math.Min(r, math.Min(g, b))
@@ -56,7 +56,7 @@ func RGBToHLS(rgb color.RGBA) (hsb HSB) {
 }
 
 func (hsl HSB) HSB2RGB() (color.RGBA) {
-	var max_rgb_val = 256.0
+	var max_rgb_val = 255.0
 	var sat = hsl.s*100
 	var bright = hsl.b*100
 	var hue = hsl.h
