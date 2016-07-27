@@ -9,5 +9,8 @@ import (
 func main() {
 
 	hbs :=c.RGBToHLS(color.RGBA{R: 79, G: 24, B: 23})
-	fmt.Print(hbs)
+	fmt.Print(hbs.Gethsb())
+
+	rgb:=hbs.HSB2RGB()
+	fmt.Println(rgb)
 }
