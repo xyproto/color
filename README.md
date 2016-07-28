@@ -1,10 +1,14 @@
-#color
+# color
+
+## Example usage:
 
 ```
+package main
+
 import (
-	"image/color"
 	"fmt"
 	hbscolor "github.com/xyproto/color"
+	"image/color"
 )
 
 func main() {
@@ -14,5 +18,6 @@ func main() {
 
 	rgb := hbs.HSB2RGB()
 	fmt.Println(rgb)
+
 }
 ```
