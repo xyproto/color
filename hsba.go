@@ -5,6 +5,8 @@ import (
 	"math"
 )
 
+const versionString = "HSBA 1.0"
+
 // HSBA stands for hue, saturation, brightness and alpha
 type HSBA struct {
 	H    int     // hue, from 0 to 360
