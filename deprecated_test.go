@@ -1,6 +1,8 @@
 package color
 
 import (
+	"fmt"
+	"image/color"
 	"testing"
 )
 
@@ -16,4 +18,10 @@ func TestHSB(t *testing.T) {
 	if rgb.B != byte(82) {
 		t.Fatalf("%d != %d", rgb.B, 82)
 	}
+}
+
+func ExampleHSB() {
+	hsb := NewHSB(color.RGBA{R: 79, G: 24, B: 23})
+	fmt.Println(hsb.AsInts())
+	// Output: 1 180 79
 }

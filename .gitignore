@@ -25,6 +25,5 @@ _testmain.go
 *.exe
 *.test
 
-examples/simple/simple
-examples/png/png
-examples/png/output.png
+cmd/cmd
+cmd/*.png

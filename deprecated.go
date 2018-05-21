@@ -27,7 +27,21 @@ func (hsb HSB) HSB2RGB() color.RGBA {
 	return h.RGBA()
 }
 
+// HSB2RGB is deprecated, use hsba RGBA() instead
+func (hsb HSB) RGB() color.RGBA {
+	return hsb.HSB2RGB()
+}
+
 // AsInts is deprecated, use hsba AsInts instead
 func (h *HSB) AsInts() (int, int, int) {
 	return h.H, int(h.S * 255), int(h.B * 255)
+}
+
+func NewHSB(c color.RGBA) HSB {
+	hsba := New(c)
+	var hsb HSB
+	hsb.H = hsba.H
+	hsb.S = hsba.S
+	hsb.B = hsba.B
+	return hsb
 }
