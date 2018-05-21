@@ -7,10 +7,10 @@ import (
 )
 
 func main() {
+	hsb := hbscolor.New(color.RGBA{R: 79, G: 24, B: 23})
+	fmt.Println(hsb.AsInts())
 
-	hbs := hbscolor.RGBToHLS(color.RGBA{R: 153, G: 153, B: 153})
-	fmt.Print(hbs.Gethsb())
-
-	rgb := hbs.HSB2RGB()
+	rgb := hsb.RGB()
 	fmt.Println(rgb)
+
 }

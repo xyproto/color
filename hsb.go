@@ -5,17 +5,19 @@ import (
 	"math"
 )
 
+// HSB stands for hue, saturation and brightness
 type HSB struct {
-	H    int     //色相
+	H    int     // 色相
 	S, B float64 // ,饱和度(纯度),l/b亮度
 }
 
-func (hsb HSB) Gethsb() (int, int, int) {
+// AsInts returns the hue, saturation and brightness values as three integers, from 0 to 100
+func (hsb *HSB) AsInts() (int, int, int) {
 	return hsb.H, int(hsb.S * 100), int(hsb.B * 100)
 }
 
-func RGBToHLS(rgb color.RGBA) (hsb HSB) {
-
+// New takes a color.RGBA struct and returns a pointer to an HSB struct
+func New(rgb color.RGBA) *HSB {
 	var r, g, b float64
 	var rgb_min, rgb_max, delta float64
 
@@ -25,8 +27,11 @@ func RGBToHLS(rgb color.RGBA) (hsb HSB) {
 
 	rgb_max = math.Max(r, math.Max(g, b))
 	rgb_min = math.Min(r, math.Min(g, b))
-	hsb.B = rgb_max
+
+	hsb := &HSB{0, 0.0, rgb_max}
+
 	delta = rgb_max - rgb_min
+
 	if rgb_max == 0 {
 		hsb.S = 0
 	} else {
@@ -48,40 +53,41 @@ func RGBToHLS(rgb color.RGBA) (hsb HSB) {
 		hsb.H = int(60*(r-g)/delta + 240)
 	}
 
-	return
+	return hsb
 }
 
-func (hsl HSB) HSB2RGB() color.RGBA {
+// Return the color as RGB bytes, in a color.RGBA struct
+func (hsb *HSB) RGB() color.RGBA {
 	r, g, b := 0.0, 0.0, 0.0
-	i := int((hsl.H / 60) % 6)
-	var f float64 = float64(hsl.H)/60.0 - float64(i)
-	p := hsl.B * (1 - hsl.S)
-	q := hsl.B * (1.0 - f*hsl.S)
-	t := hsl.B * (1 - (1-f)*hsl.S)
+	i := int((hsb.H / 60) % 6)
+	var f float64 = float64(hsb.H)/60.0 - float64(i)
+	p := hsb.B * (1 - hsb.S)
+	q := hsb.B * (1.0 - f*hsb.S)
+	t := hsb.B * (1 - (1-f)*hsb.S)
 
 	switch i {
 	case 0:
-		r = hsl.B
+		r = hsb.B
 		g = t
 		b = p
 	case 1:
 		r = q
-		g = hsl.B
+		g = hsb.B
 		b = p
 	case 2:
 		r = p
-		g = hsl.B
+		g = hsb.B
 		b = t
 	case 3:
 		r = p
 		g = q
-		b = hsl.B
+		b = hsb.B
 	case 4:
 		r = t
 		g = p
-		b = hsl.B
+		b = hsb.B
 	case 5:
-		r = hsl.B
+		r = hsb.B
 		g = p
 		b = q
 	}
