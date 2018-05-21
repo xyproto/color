@@ -4,18 +4,30 @@ import (
 	"image/color"
 )
 
-// Gethsb is deprecated, use hsb.AsInts() instead
-func (hsb HSB) Gethsb() (int, int, int) {
-	return hsb.AsInts()
+// HSB stands for hue, saturation and brightness
+type HSB struct {
+	H    int     // 色相
+	S, B float64 // ,饱和度(纯度),l/b亮度
 }
 
 // RGBToHLS is deprecated, use New instead
 func RGBToHLS(rgb color.RGBA) HSB {
-	hsb := New(rgb)
+	hsb := New(rgb).WithoutAlpha()
 	return *hsb
 }
 
-// HSB2RGB is deprecated, use hsb.RGB() instead
+// Gethsb is deprecated, use hsba AsInts() instead
+func (h HSB) Gethsb() (int, int, int) {
+	return h.AsInts()
+}
+
+// HSB2RGB is deprecated, use hsba RGBA() instead
 func (hsb HSB) HSB2RGB() color.RGBA {
-	return hsb.RGB()
+	h := &HSBA{hsb.H, hsb.S, hsb.B, 1.0}
+	return h.RGBA()
+}
+
+// AsInts is deprecated, use hsba AsInts instead
+func (h *HSB) AsInts() (int, int, int) {
+	return h.H, int(h.S * 255), int(h.B * 255)
 }
